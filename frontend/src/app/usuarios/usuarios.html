@@ -1,0 +1,129 @@
+<h1>Usuarios</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (!modo()) {
+  <div class="acciones acciones-barra">
+    <button type="button" class="btn btn-primario" (click)="nuevo()">Nuevo usuario</button>
+  </div>
+}
+
+@if (modo()) {
+  <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+    <h2>{{ modo() === 'crear' ? 'Nuevo usuario' : 'Editar usuario' }}</h2>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" formControlName="nombre" maxlength="100" />
+        @if (mostrarError('nombre'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" maxlength="120" />
+        @if (mostrarError('email'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="fila">
+      @if (modo() === 'crear') {
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" formControlName="password" minlength="8" />
+          @if (mostrarError('password'); as error) {
+            <span class="error-campo">{{ error }}</span>
+          }
+        </div>
+      }
+      <div class="campo">
+        <label for="rolId">Rol</label>
+        <select id="rolId" formControlName="rolId">
+          <option [ngValue]="null">Seleccione un rol</option>
+          @for (rol of roles(); track rol.id) {
+            <option [ngValue]="rol.id">{{ rol.nombre }}</option>
+          }
+        </select>
+        @if (mostrarError('rolId'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn btn-primario" [disabled]="form.invalid || enviando()">
+        {{ enviando() ? 'Guardando…' : 'Guardar' }}
+      </button>
+      <button type="button" class="btn" (click)="cerrar()">Cancelar</button>
+    </div>
+  </form>
+}
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  @if (usuarios(); as pagina) {
+    @if (pagina.content.length === 0) {
+      <p class="vacio">Sin usuarios</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Fecha de creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of pagina.content; track usuario.id) {
+              <tr>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.rol }}</td>
+                <td>
+                  <span
+                    [class]="
+                      'etiqueta ' + (usuario.activo ? 'etiqueta-activo' : 'etiqueta-inactivo')
+                    "
+                  >
+                    {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>{{ usuario.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <div class="acciones">
+                    <button type="button" class="btn btn-chico" (click)="editar(usuario)">
+                      Editar
+                    </button>
+                    @if (!esPropiaFila(usuario)) {
+                      <button
+                        type="button"
+                        class="btn btn-chico"
+                        [class.btn-peligro]="usuario.activo"
+                        (click)="cambiarActivo(usuario)"
+                      >
+                        {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <app-paginador [pagina]="pagina.page" (paginaCambiada)="irAPagina($event)" />
+    }
+  } @else if (!error()) {
+    <div class="cargando">Cargando</div>
+  }
+</div>

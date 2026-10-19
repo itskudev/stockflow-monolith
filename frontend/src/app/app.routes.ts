@@ -76,6 +76,13 @@ export const routes: Routes = [
         loadComponent: () => import('./stock-bajo/stock-bajo').then((m) => m.StockBajoComponent),
         title: 'StockFlow - Stock bajo',
       },
+      {
+        path: 'usuarios',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN'] },
+        loadComponent: () => import('./usuarios/usuarios').then((m) => m.UsuariosComponent),
+        title: 'StockFlow - Usuarios',
+      },
       // Las rutas de cada funcionalidad se agregan en sus pasos correspondientes
     ],
   },

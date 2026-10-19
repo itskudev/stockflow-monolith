@@ -1,0 +1,21 @@
+.acciones-barra {
+  margin-bottom: var(--espaciado);
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.etiqueta-activo {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.etiqueta-inactivo {
+  background: #e5e7eb;
+  color: #6b7280;
+}
