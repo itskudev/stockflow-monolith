@@ -2,6 +2,7 @@ package com.kudev.stockflow.auth;
 
 import com.kudev.stockflow.auth.dto.LoginRequest;
 import com.kudev.stockflow.auth.dto.LoginResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @SecurityRequirements(value = {})
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
     }
