@@ -26,6 +26,12 @@ public class GlobalExceptionHandler {
         return construir(HttpStatus.BAD_REQUEST, "Datos de entrada inválidos", request, errores);
     }
 
+    @ExceptionHandler(SolicitudInvalidaException.class)
+    public ResponseEntity<ApiError> handleSolicitudInvalida(SolicitudInvalidaException ex,
+            HttpServletRequest request) {
+        return construir(HttpStatus.BAD_REQUEST, ex.getMessage(), request, null);
+    }
+
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<ApiError> handleNoEncontrado(RecursoNoEncontradoException ex, HttpServletRequest request) {
         return construir(HttpStatus.NOT_FOUND, ex.getMessage(), request, null);
