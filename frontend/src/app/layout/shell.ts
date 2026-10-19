@@ -1,10 +1,17 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../core/auth/auth.service';
+import { Rol } from '../core/auth/sesion.model';
 
 export interface EnlaceMenu {
   etiqueta: string;
   ruta: string;
+  roles: Rol[];
 }
+
+const ENLACES: EnlaceMenu[] = [
+  { etiqueta: 'Inicio', ruta: '/', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
+];
 
 @Component({
   selector: 'app-shell',
@@ -13,7 +20,17 @@ export interface EnlaceMenu {
   styleUrl: './shell.css',
 })
 export class ShellComponent {
-  protected readonly enlaces = signal<EnlaceMenu[]>([
-    { etiqueta: 'Inicio', ruta: '/' },
-  ]);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
+  protected readonly sesion = this.auth.sesion;
+  protected readonly enlaces = computed(() => {
+    const rol = this.auth.rol();
+    return ENLACES.filter((enlace) => rol !== null && enlace.roles.includes(rol));
+  });
+
+  salir(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 }

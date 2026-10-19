@@ -1,4 +1,5 @@
 <section class="tarjeta">
-  <h1>Bienvenido a StockFlow</h1>
+  <h1>Bienvenido, {{ sesion()?.nombre }}</h1>
   <p>Sistema de gestión de pedidos e inventario.</p>
+  <p><strong>Rol:</strong> {{ sesion()?.rol }}</p>
 </section>

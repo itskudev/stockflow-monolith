@@ -1,8 +1,15 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'login',
+    loadComponent: () => import('./auth/login/login').then((m) => m.LoginComponent),
+    title: 'StockFlow - Iniciar sesión',
+  },
+  {
     path: '',
+    canActivate: [authGuard],
     loadComponent: () => import('./layout/shell').then((m) => m.ShellComponent),
     children: [
       {
