@@ -32,6 +32,13 @@ export const routes: Routes = [
         loadComponent: () => import('./productos/productos').then((m) => m.ProductosComponent),
         title: 'StockFlow - Productos',
       },
+      {
+        path: 'clientes',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR'] },
+        loadComponent: () => import('./clientes/clientes').then((m) => m.ClientesComponent),
+        title: 'StockFlow - Clientes',
+      },
       // Las rutas de cada funcionalidad se agregan en sus pasos correspondientes
     ],
   },

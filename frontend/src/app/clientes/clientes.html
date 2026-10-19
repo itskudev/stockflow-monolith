@@ -1,0 +1,126 @@
+<h1>Clientes</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (!modo()) {
+  <div class="acciones acciones-barra">
+    <button type="button" class="btn btn-primario" (click)="nuevo()">Nuevo cliente</button>
+  </div>
+}
+
+@if (modo()) {
+  <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+    <h2>{{ modo() === 'crear' ? 'Nuevo cliente' : 'Editar cliente' }}</h2>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" formControlName="nombre" maxlength="120" />
+        @if (mostrarError('nombre'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="documento">Documento</label>
+        <input id="documento" formControlName="documento" maxlength="20" />
+        @if (mostrarError('documento'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" maxlength="120" />
+        @if (mostrarError('email'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono</label>
+        <input id="telefono" formControlName="telefono" maxlength="20" />
+        @if (mostrarError('telefono'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="direccion">Dirección</label>
+      <input id="direccion" formControlName="direccion" maxlength="255" />
+      @if (mostrarError('direccion'); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn btn-primario">Guardar</button>
+      <button type="button" class="btn" (click)="cerrar()">Cancelar</button>
+    </div>
+  </form>
+}
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  <div class="filtros">
+    <div class="campo">
+      <label for="q">Buscar</label>
+      <input id="q" type="search" placeholder="Nombre o documento" (input)="onBusqueda($event)" />
+    </div>
+  </div>
+
+  @if (clientes(); as pagina) {
+    @if (pagina.content.length === 0) {
+      <p class="vacio">Sin clientes</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cliente of pagina.content; track cliente.id) {
+              <tr>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.documento }}</td>
+                <td>{{ cliente.email || '—' }}</td>
+                <td>{{ cliente.telefono || '—' }}</td>
+                <td>{{ cliente.direccion || '—' }}</td>
+                <td>
+                  <div class="acciones">
+                    <button type="button" class="btn btn-chico" (click)="editar(cliente)">
+                      Editar
+                    </button>
+                    @if (esAdmin()) {
+                      <button
+                        type="button"
+                        class="btn btn-chico btn-peligro"
+                        (click)="eliminar(cliente)"
+                      >
+                        Eliminar
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <app-paginador [pagina]="pagina.page" (paginaCambiada)="irAPagina($event)" />
+    }
+  } @else if (!error()) {
+    <div class="cargando">Cargando</div>
+  }
+</div>
