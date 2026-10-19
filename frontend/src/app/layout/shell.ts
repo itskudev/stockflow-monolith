@@ -11,6 +11,8 @@ export interface EnlaceMenu {
 
 const ENLACES: EnlaceMenu[] = [
   { etiqueta: 'Inicio', ruta: '/', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
+  { etiqueta: 'Categorías', ruta: '/categorias', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
+  { etiqueta: 'Productos', ruta: '/productos', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
 ];
 
 @Component({

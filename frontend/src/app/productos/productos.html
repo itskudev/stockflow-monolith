@@ -1,0 +1,181 @@
+<h1>Productos</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (esAdmin()) {
+  <div class="acciones acciones-barra">
+    @if (!modo()) {
+      <button type="button" class="btn btn-primario" (click)="nuevo()">Nuevo producto</button>
+    }
+  </div>
+}
+
+@if (modo()) {
+  <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+    <h2>{{ modo() === 'crear' ? 'Nuevo producto' : 'Editar producto' }}</h2>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="sku">SKU</label>
+        <input id="sku" formControlName="sku" maxlength="40" />
+        @if (mostrarError('sku'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" formControlName="nombre" maxlength="120" />
+        @if (mostrarError('nombre'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="categoria">Categoría</label>
+        <select id="categoria" formControlName="categoriaId">
+          <option [ngValue]="null">Seleccione una categoría</option>
+          @for (categoria of categorias(); track categoria.id) {
+            <option [ngValue]="categoria.id">{{ categoria.nombre }}</option>
+          }
+        </select>
+        @if (mostrarError('categoriaId'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="precio">Precio</label>
+        <input id="precio" type="number" formControlName="precio" min="0" step="0.01" />
+        @if (mostrarError('precio'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="stockMinimo">Stock mínimo</label>
+        <input id="stockMinimo" type="number" formControlName="stockMinimo" min="0" step="1" />
+        @if (mostrarError('stockMinimo'); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="descripcion">Descripción</label>
+      <input id="descripcion" formControlName="descripcion" maxlength="255" />
+      @if (mostrarError('descripcion'); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn btn-primario">Guardar</button>
+      <button type="button" class="btn" (click)="cerrar()">Cancelar</button>
+    </div>
+  </form>
+}
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  <div class="filtros">
+    <div class="campo">
+      <label for="q">Buscar</label>
+      <input id="q" type="search" placeholder="Nombre o SKU" (input)="onBusqueda($event)" />
+    </div>
+    <div class="campo">
+      <label for="filtroCategoria">Categoría</label>
+      <select id="filtroCategoria" [value]="categoriaId() ?? ''" (change)="onCategoria($event)">
+        <option value="">Todas</option>
+        @for (categoria of categorias(); track categoria.id) {
+          <option [value]="categoria.id">{{ categoria.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label for="filtroActivo">Estado</label>
+      <select
+        id="filtroActivo"
+        [value]="soloActivos() ? 'true' : 'false'"
+        (change)="onActivo($event)"
+      >
+        <option value="true">Activos</option>
+        <option value="false">Inactivos</option>
+      </select>
+    </div>
+  </div>
+
+  @if (productos(); as pagina) {
+    @if (pagina.content.length === 0) {
+      <p class="vacio">Sin productos</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th class="numerico">Precio</th>
+              <th class="numerico">Stock</th>
+              <th class="numerico">Mínimo</th>
+              <th>Estado</th>
+              @if (esAdmin()) {
+                <th>Acciones</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of pagina.content; track producto.id) {
+              <tr [class.fila-inactiva]="!producto.activo">
+                <td>{{ producto.sku }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoriaNombre }}</td>
+                <td class="numerico">{{ producto.precio | number: '1.2-2' }}</td>
+                <td class="numerico">
+                  <span
+                    [class.stock-bajo]="esStockBajo(producto)"
+                    [attr.title]="'Stock mínimo: ' + producto.stockMinimo"
+                  >
+                    {{ producto.stockActual }}
+                  </span>
+                </td>
+                <td class="numerico">{{ producto.stockMinimo }}</td>
+                <td>
+                  <span
+                    [class]="
+                      'etiqueta ' + (producto.activo ? 'etiqueta-activo' : 'etiqueta-inactivo')
+                    "
+                  >
+                    {{ producto.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                @if (esAdmin()) {
+                  <td>
+                    <div class="acciones">
+                      <button type="button" class="btn btn-chico" (click)="editar(producto)">
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-chico btn-peligro"
+                        (click)="desactivar(producto)"
+                      >
+                        Desactivar
+                      </button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <app-paginador [pagina]="pagina.page" (paginaCambiada)="irAPagina($event)" />
+    }
+  } @else if (!error()) {
+    <div class="cargando">Cargando</div>
+  }
+</div>

@@ -1,0 +1,90 @@
+<h1>Categorías</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (esAdmin()) {
+  <div class="acciones acciones-barra">
+    @if (!modo()) {
+      <button type="button" class="btn btn-primario" (click)="nueva()">Nueva categoría</button>
+    }
+  </div>
+}
+
+@if (modo()) {
+  <form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+    <h2>{{ modo() === 'crear' ? 'Nueva categoría' : 'Editar categoría' }}</h2>
+
+    <div class="campo">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" formControlName="nombre" maxlength="80" />
+      @if (mostrarError('nombre'); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="descripcion">Descripción</label>
+      <input id="descripcion" formControlName="descripcion" maxlength="255" />
+      @if (mostrarError('descripcion'); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn btn-primario">Guardar</button>
+      <button type="button" class="btn" (click)="cerrar()">Cancelar</button>
+    </div>
+  </form>
+}
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  @if (categorias() === null && !error()) {
+    <div class="cargando">Cargando</div>
+  } @else if (categorias(); as lista) {
+    @if (lista.length === 0) {
+      <p class="vacio">Sin categorías</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              @if (esAdmin()) {
+                <th>Acciones</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (categoria of lista; track categoria.id) {
+              <tr>
+                <td>{{ categoria.nombre }}</td>
+                <td>{{ categoria.descripcion || '—' }}</td>
+                @if (esAdmin()) {
+                  <td>
+                    <div class="acciones">
+                      <button type="button" class="btn btn-chico" (click)="editar(categoria)">
+                        Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-chico btn-peligro"
+                        (click)="eliminar(categoria)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
+import { roleGuard } from './core/auth/role.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,20 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./layout/home').then((m) => m.HomeComponent),
         title: 'StockFlow - Inicio',
+      },
+      {
+        path: 'categorias',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
+        loadComponent: () => import('./categorias/categorias').then((m) => m.CategoriasComponent),
+        title: 'StockFlow - Categorías',
+      },
+      {
+        path: 'productos',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
+        loadComponent: () => import('./productos/productos').then((m) => m.ProductosComponent),
+        title: 'StockFlow - Productos',
       },
       // Las rutas de cada funcionalidad se agregan en sus pasos correspondientes
     ],
