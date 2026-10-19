@@ -1,0 +1,72 @@
+<h1>Pedidos</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+<div class="acciones acciones-barra">
+  <a class="btn btn-primario" routerLink="/pedidos/nuevo">Nuevo pedido</a>
+</div>
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  <div class="filtros">
+    <div class="campo">
+      <label for="filtroEstado">Estado</label>
+      <select id="filtroEstado" [value]="estado() ?? ''" (change)="onEstado($event)">
+        <option value="">Todos</option>
+        <option value="PENDIENTE">PENDIENTE</option>
+        <option value="COMPLETADO">COMPLETADO</option>
+        <option value="CANCELADO">CANCELADO</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="filtroCliente">Cliente</label>
+      <select id="filtroCliente" [value]="clienteId() ?? ''" (change)="onCliente($event)">
+        <option value="">Todos</option>
+        @for (cliente of clientes(); track cliente.id) {
+          <option [value]="cliente.id">{{ cliente.nombre }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (pedidos(); as pagina) {
+    @if (pagina.content.length === 0) {
+      <p class="vacio">Sin pedidos</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th class="numerico">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pedido of pagina.content; track pedido.id) {
+              <tr>
+                <td>
+                  <a [routerLink]="['/pedidos', pedido.id]">#{{ pedido.id }}</a>
+                </td>
+                <td>{{ pedido.clienteNombre }}</td>
+                <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <app-estado-pedido [estado]="pedido.estado" />
+                </td>
+                <td class="numerico">{{ pedido.total | number: '1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <app-paginador [pagina]="pagina.page" (paginaCambiada)="irAPagina($event)" />
+    }
+  } @else if (!error()) {
+    <div class="cargando">Cargando</div>
+  }
+</div>

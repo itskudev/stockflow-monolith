@@ -39,6 +39,28 @@ export const routes: Routes = [
         loadComponent: () => import('./clientes/clientes').then((m) => m.ClientesComponent),
         title: 'StockFlow - Clientes',
       },
+      {
+        path: 'pedidos',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR'] },
+        loadComponent: () => import('./pedidos/pedidos').then((m) => m.PedidosComponent),
+        title: 'StockFlow - Pedidos',
+      },
+      {
+        path: 'pedidos/nuevo',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR'] },
+        loadComponent: () => import('./pedidos/pedido-nuevo').then((m) => m.PedidoNuevoComponent),
+        title: 'StockFlow - Nuevo pedido',
+      },
+      {
+        path: 'pedidos/:id',
+        canActivate: [authGuard, roleGuard],
+        data: { roles: ['ADMIN', 'VENDEDOR'] },
+        loadComponent: () =>
+          import('./pedidos/pedido-detalle').then((m) => m.PedidoDetalleComponent),
+        title: 'StockFlow - Pedido',
+      },
       // Las rutas de cada funcionalidad se agregan en sus pasos correspondientes
     ],
   },

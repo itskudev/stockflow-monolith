@@ -1,0 +1,15 @@
+.acciones-barra {
+  margin-bottom: var(--espaciado);
+}
+
+.filtros {
+  display: flex;
+  gap: var(--espaciado);
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: var(--espaciado);
+}
+
+.filtros .campo {
+  margin-bottom: 0;
+}

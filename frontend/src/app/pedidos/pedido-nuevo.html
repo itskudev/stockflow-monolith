@@ -1,0 +1,103 @@
+<h1>Nuevo pedido</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+<form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+  <div class="fila">
+    <div class="campo">
+      <label for="clienteId">Cliente</label>
+      <select id="clienteId" formControlName="clienteId">
+        <option [ngValue]="null">Seleccione un cliente</option>
+        @for (cliente of clientes(); track cliente.id) {
+          <option [ngValue]="cliente.id">{{ cliente.nombre }} ({{ cliente.documento }})</option>
+        }
+      </select>
+      @if (errorCliente(); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+    <div class="campo campo-observacion">
+      <label for="observacion">Observación (opcional)</label>
+      <textarea id="observacion" formControlName="observacion" rows="2" maxlength="255"></textarea>
+      @if (errorObservacion(); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+  </div>
+
+  <h2>Líneas</h2>
+
+  @for (linea of lineas.controls; track $index; let i = $index) {
+    <div class="linea" [formGroup]="linea">
+      <div class="campo campo-producto">
+        <label>Producto</label>
+        <input
+          type="search"
+          formControlName="busqueda"
+          placeholder="Buscar por nombre o SKU"
+          (input)="onBusquedaProducto(i, $event)"
+        />
+        <select formControlName="productoId">
+          <option [ngValue]="null">Seleccione un producto</option>
+          @for (producto of opcionesLinea(i); track producto.id) {
+            <option [ngValue]="producto.id" [disabled]="enOtraLinea(producto.id, i)">
+              {{ producto.sku }} - {{ producto.nombre }}
+            </option>
+          }
+        </select>
+        @if (errorProducto(linea); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+
+      <div class="campo campo-cantidad">
+        <label>Cantidad</label>
+        <input type="number" formControlName="cantidad" min="1" step="1" />
+        @if (errorCantidad(linea); as error) {
+          <span class="error-campo">{{ error }}</span>
+        }
+      </div>
+
+      <div class="campo campo-datos">
+        <label>Precio, stock y subtotal</label>
+        @if (productoDe(i); as producto) {
+          <div class="datos-linea">
+            <span>Precio: {{ producto.precio | number: '1.2-2' }}</span>
+            <span>Stock: {{ producto.stockActual }}</span>
+            <span class="subtotal">Subtotal: {{ subtotalLinea(i) | number: '1.2-2' }}</span>
+          </div>
+        } @else {
+          <span class="sin-datos">Buscá y elegí un producto</span>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-chico btn-peligro btn-quitar"
+        (click)="quitarLinea(i)"
+        [disabled]="lineas.length === 1"
+        [attr.title]="lineas.length === 1 ? 'Debe haber al menos una línea' : 'Quitar esta línea'"
+      >
+        Quitar
+      </button>
+    </div>
+  }
+
+  @if (lineas.hasError('productoDuplicado') && lineas.touched) {
+    <p class="error-campo">No se puede repetir el mismo producto en dos líneas</p>
+  }
+
+  <div class="acciones acciones-lineas">
+    <button type="button" class="btn" (click)="agregarLinea()">Agregar línea</button>
+    <span class="total">Total: {{ total() | number: '1.2-2' }}</span>
+  </div>
+
+  <div class="acciones">
+    <button type="submit" class="btn btn-primario" [disabled]="form.invalid || enviando()">
+      {{ enviando() ? 'Guardando…' : 'Crear pedido' }}
+    </button>
+    <a class="btn" routerLink="/pedidos">Cancelar</a>
+  </div>
+</form>

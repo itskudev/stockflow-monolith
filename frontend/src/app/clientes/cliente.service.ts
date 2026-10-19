@@ -10,10 +10,13 @@ export class ClienteService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/clientes`;
 
-  listar(q: string | null, pagina: number): Observable<Pagina<ClienteResponse>> {
+  listar(q: string | null, pagina: number, size?: number): Observable<Pagina<ClienteResponse>> {
     let params = new HttpParams().set('page', pagina);
     if (q) {
       params = params.set('q', q);
+    }
+    if (size !== undefined) {
+      params = params.set('size', size);
     }
     return this.http.get<Pagina<ClienteResponse>>(this.base, { params });
   }

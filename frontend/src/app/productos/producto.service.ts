@@ -10,13 +10,20 @@ export class ProductoService {
   private readonly http = inject(HttpClient);
   private readonly base = `${environment.apiUrl}/productos`;
 
-  listar(filtros: ProductoFiltros, pagina: number): Observable<Pagina<ProductoResponse>> {
+  listar(
+    filtros: ProductoFiltros,
+    pagina: number,
+    size?: number,
+  ): Observable<Pagina<ProductoResponse>> {
     let params = new HttpParams().set('page', pagina).set('activo', filtros.activo);
     if (filtros.q) {
       params = params.set('q', filtros.q);
     }
     if (filtros.categoriaId !== null) {
       params = params.set('categoriaId', filtros.categoriaId);
+    }
+    if (size !== undefined) {
+      params = params.set('size', size);
     }
     return this.http.get<Pagina<ProductoResponse>>(this.base, { params });
   }

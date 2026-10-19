@@ -1,0 +1,85 @@
+<h1>Pedido</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (pedido(); as pedido) {
+  <div class="acciones acciones-barra">
+    <a class="btn" routerLink="/pedidos">← Volver</a>
+    @if (pedido.estado === 'PENDIENTE') {
+      <button type="button" class="btn btn-primario" (click)="completar()">Completar</button>
+      <button type="button" class="btn btn-peligro" (click)="cancelar()">Cancelar</button>
+    }
+  </div>
+
+  <div class="tarjeta">
+    <h2>Datos del pedido</h2>
+    <div class="datos">
+      <div class="dato">
+        <span class="etiqueta-dato">Número</span>
+        <strong>#{{ pedido.id }}</strong>
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Cliente</span>
+        {{ pedido.cliente.nombre }}
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Vendedor</span>
+        {{ pedido.vendedor }}
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Fecha</span>
+        {{ pedido.fechaCreacion | date: 'dd/MM/yyyy HH:mm' }}
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Estado</span>
+        <app-estado-pedido [estado]="pedido.estado" />
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Observación</span>
+        {{ pedido.observacion || '—' }}
+      </div>
+      <div class="dato">
+        <span class="etiqueta-dato">Total</span>
+        <strong>{{ pedido.total | number: '1.2-2' }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <h2>Líneas</h2>
+    <div class="tabla-scroll">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Producto</th>
+            <th class="numerico">Cantidad</th>
+            <th class="numerico">Precio unitario</th>
+            <th class="numerico">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (detalle of pedido.detalles; track detalle.productoId) {
+            <tr>
+              <td>{{ detalle.sku }}</td>
+              <td>{{ detalle.productoNombre }}</td>
+              <td class="numerico">{{ detalle.cantidad }}</td>
+              <td class="numerico">{{ detalle.precioUnitario | number: '1.2-2' }}</td>
+              <td class="numerico">{{ detalle.subtotal | number: '1.2-2' }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="4">Total</th>
+            <th class="numerico">{{ pedido.total | number: '1.2-2' }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+} @else if (!error()) {
+  <div class="cargando">Cargando</div>
+}

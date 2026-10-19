@@ -14,6 +14,7 @@ const ENLACES: EnlaceMenu[] = [
   { etiqueta: 'Categorías', ruta: '/categorias', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
   { etiqueta: 'Productos', ruta: '/productos', roles: ['ADMIN', 'VENDEDOR', 'ALMACENERO'] },
   { etiqueta: 'Clientes', ruta: '/clientes', roles: ['ADMIN', 'VENDEDOR'] },
+  { etiqueta: 'Pedidos', ruta: '/pedidos', roles: ['ADMIN', 'VENDEDOR'] },
 ];
 
 @Component({

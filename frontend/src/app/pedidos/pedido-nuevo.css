@@ -1,0 +1,64 @@
+.campo-observacion {
+  flex: 1 1 260px;
+}
+
+.linea {
+  display: flex;
+  gap: var(--espaciado);
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: var(--espaciado);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  margin-bottom: var(--espaciado);
+}
+
+.campo-producto {
+  flex: 2 1 320px;
+  margin-bottom: 0;
+}
+
+.campo-cantidad {
+  width: 130px;
+  margin-bottom: 0;
+}
+
+.campo-datos {
+  flex: 1 1 240px;
+  margin-bottom: 0;
+}
+
+.datos-linea {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+  min-height: 2.1rem;
+}
+
+.datos-linea .subtotal {
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+.sin-datos {
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+}
+
+.btn-quitar {
+  margin-bottom: 0;
+}
+
+.acciones-lineas {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--espaciado);
+}
+
+.total {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
