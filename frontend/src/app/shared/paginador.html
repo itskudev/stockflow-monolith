@@ -1,0 +1,12 @@
+<div class="paginador">
+  <button type="button" class="btn" [disabled]="!hayAnterior()" (click)="anterior()">
+    ‹ Anterior
+  </button>
+  <span class="paginador-info">
+    Página {{ pagina().number + 1 }} de {{ totalPaginas() }}
+    ({{ pagina().totalElements }} elementos)
+  </span>
+  <button type="button" class="btn" [disabled]="!haySiguiente()" (click)="siguiente()">
+    Siguiente ›
+  </button>
+</div>

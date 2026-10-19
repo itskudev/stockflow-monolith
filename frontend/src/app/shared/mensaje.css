@@ -1,0 +1,25 @@
+.mensaje {
+  padding: 0.65rem var(--espaciado);
+  border-radius: var(--radio);
+  border: 1px solid transparent;
+  margin-bottom: var(--espaciado);
+  font-size: 0.95rem;
+}
+
+.mensaje-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: var(--color-peligro);
+}
+
+.mensaje-exito {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: var(--color-exito);
+}
+
+.mensaje-info {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: var(--color-info);
+}

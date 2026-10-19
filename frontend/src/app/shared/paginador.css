@@ -1,0 +1,12 @@
+.paginador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaciado);
+  margin-top: var(--espaciado);
+}
+
+.paginador-info {
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+}

@@ -1,1 +1,230 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============ Variables ============ */
+:root {
+  --color-primario: #1d4ed8;
+  --color-primario-oscuro: #1e40af;
+  --color-fondo: #f5f7fa;
+  --color-superficie: #ffffff;
+  --color-texto: #1f2937;
+  --color-texto-suave: #6b7280;
+  --color-borde: #e5e7eb;
+  --color-peligro: #dc2626;
+  --color-exito: #16a34a;
+  --color-aviso: #d97706;
+  --color-info: #2563eb;
+
+  --espaciado: 1rem;
+  --espaciado-grande: 1.5rem;
+  --radio: 6px;
+  --sombra: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ============ Base ============ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: var(--espaciado);
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+a {
+  color: var(--color-primario);
+}
+
+/* ============ Tarjetas ============ */
+.tarjeta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: var(--espaciado-grande);
+  margin-bottom: var(--espaciado);
+}
+
+/* ============ Botones ============ */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--color-fondo);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primario {
+  background: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+.btn-primario:hover:not(:disabled) {
+  background: var(--color-primario-oscuro);
+}
+
+.btn-peligro {
+  background: var(--color-peligro);
+  border-color: var(--color-peligro);
+  color: #fff;
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.btn-chico {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+/* ============ Formularios ============ */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: var(--espaciado);
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input,
+select,
+textarea {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: var(--color-superficie);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+  border-color: var(--color-primario);
+}
+
+input:disabled,
+select:disabled {
+  background: var(--color-fondo);
+  color: var(--color-texto-suave);
+}
+
+.error-campo {
+  color: var(--color-peligro);
+  font-size: 0.85rem;
+}
+
+/* ============ Tablas ============ */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-superficie);
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.6rem var(--espaciado);
+  text-align: left;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla th {
+  background: var(--color-fondo);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-texto-suave);
+}
+
+.tabla tr:hover td {
+  background: var(--color-fondo);
+}
+
+.tabla .numerico {
+  text-align: right;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.tabla-scroll .tabla {
+  border: none;
+}
+
+/* ============ Utilidades ============ */
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fila {
+  display: flex;
+  gap: var(--espaciado);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.vacio {
+  padding: var(--espaciado-grande);
+  text-align: center;
+  color: var(--color-texto-suave);
+}
+
+.cargando {
+  padding: var(--espaciado-grande);
+  text-align: center;
+  color: var(--color-texto-suave);
+}
+
+.cargando::after {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.5rem;
+  vertical-align: -0.15rem;
+  border: 2px solid var(--color-borde);
+  border-top-color: var(--color-primario);
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,18 @@
+<header class="barra">
+  <a class="marca" routerLink="/">StockFlow</a>
+  <nav class="menu">
+    @for (enlace of enlaces(); track enlace.ruta) {
+      <a
+        [routerLink]="enlace.ruta"
+        routerLinkActive="activo"
+        [routerLinkActiveOptions]="{ exact: enlace.ruta === '/' }"
+      >
+        {{ enlace.etiqueta }}
+      </a>
+    }
+  </nav>
+</header>
+
+<main class="contenido">
+  <router-outlet />
+</main>
