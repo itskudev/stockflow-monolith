@@ -1,0 +1,55 @@
+.campo-producto {
+  flex: 2 1 300px;
+}
+
+.campo-tipo {
+  width: 170px;
+}
+
+.campo-cantidad {
+  width: 150px;
+}
+
+.campo-motivo {
+  flex: 2 1 260px;
+}
+
+.ayuda {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.filtros {
+  display: flex;
+  gap: var(--espaciado);
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: var(--espaciado);
+}
+
+.filtros .campo {
+  margin-bottom: 0;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tipo-entrada {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tipo-salida {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tipo-ajuste {
+  background: #dbeafe;
+  color: #1e40af;
+}

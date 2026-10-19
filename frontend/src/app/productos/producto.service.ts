@@ -28,6 +28,14 @@ export class ProductoService {
     return this.http.get<Pagina<ProductoResponse>>(this.base, { params });
   }
 
+  obtener(id: number): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(`${this.base}/${id}`);
+  }
+
+  stockBajo(): Observable<ProductoResponse[]> {
+    return this.http.get<ProductoResponse[]>(`${this.base}/stock-bajo`);
+  }
+
   crear(request: ProductoRequest): Observable<ProductoResponse> {
     return this.http.post<ProductoResponse>(this.base, request);
   }

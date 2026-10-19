@@ -1,0 +1,50 @@
+<h1>Stock bajo</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+<div class="tarjeta">
+  <h2>Productos con stock menor o igual al mínimo</h2>
+
+  @if (productos() === null && !error()) {
+    <div class="cargando">Cargando</div>
+  } @else if (productos(); as lista) {
+    @if (lista.length === 0) {
+      <p class="vacio">No hay productos con stock bajo</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Nombre</th>
+              <th class="numerico">Stock actual</th>
+              <th class="numerico">Stock mínimo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of lista; track producto.id) {
+              <tr>
+                <td>{{ producto.sku }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td class="numerico stock-bajo-num">{{ producto.stockActual }}</td>
+                <td class="numerico">{{ producto.stockMinimo }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-chico btn-primario"
+                    (click)="registrarEntrada(producto)"
+                  >
+                    Registrar entrada
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

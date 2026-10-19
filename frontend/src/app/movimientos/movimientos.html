@@ -1,0 +1,176 @@
+<h1>Movimientos de inventario</h1>
+
+@if (error()) {
+  <app-mensaje tipo="error" [texto]="error()" />
+}
+
+@if (exito()) {
+  <app-mensaje tipo="exito" [texto]="exito()" />
+}
+
+<form class="tarjeta" [formGroup]="form" (ngSubmit)="guardar()">
+  <h2>Registrar movimiento</h2>
+
+  <div class="fila">
+    <div class="campo campo-producto">
+      <label for="busqueda">Producto (solo activos)</label>
+      <input
+        id="busqueda"
+        type="search"
+        formControlName="busqueda"
+        placeholder="Buscar por nombre o SKU"
+        (input)="onBusquedaProducto($event)"
+      />
+      <select formControlName="productoId">
+        <option [ngValue]="null">Seleccione un producto</option>
+        @for (producto of opcionesFormulario(); track producto.id) {
+          <option [ngValue]="producto.id">{{ producto.sku }} - {{ producto.nombre }}</option>
+        }
+      </select>
+      @if (productoFormulario(); as producto) {
+        <span class="ayuda">Stock actual: {{ producto.stockActual }}</span>
+      }
+      @if (errorProducto(); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="campo campo-tipo">
+      <label for="tipo">Tipo</label>
+      <select id="tipo" formControlName="tipo">
+        <option value="ENTRADA">ENTRADA</option>
+        <option value="AJUSTE">AJUSTE</option>
+      </select>
+    </div>
+
+    <div class="campo campo-cantidad">
+      <label for="cantidad">Cantidad</label>
+      <input id="cantidad" type="number" formControlName="cantidad" step="1" />
+      @if (errorCantidad(); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+
+    <div class="campo campo-motivo">
+      <label for="motivo">Motivo</label>
+      <input
+        id="motivo"
+        formControlName="motivo"
+        maxlength="255"
+        placeholder="Requerido para ajustes"
+      />
+      @if (errorMotivo(); as error) {
+        <span class="error-campo">{{ error }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="acciones">
+    <button type="submit" class="btn btn-primario" [disabled]="form.invalid || enviando()">
+      {{ enviando() ? 'Guardando…' : 'Registrar' }}
+    </button>
+  </div>
+</form>
+
+<div class="tarjeta">
+  <h2>Listado</h2>
+
+  <div class="filtros">
+    <div class="campo">
+      <label for="filtroProducto">Producto</label>
+      <select
+        id="filtroProducto"
+        [value]="filtroProductoId() ?? ''"
+        (change)="onFiltroProducto($event)"
+      >
+        <option value="">Todos</option>
+        @for (producto of productosFiltro(); track producto.id) {
+          <option [value]="producto.id">{{ producto.sku }} - {{ producto.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label for="filtroTipo">Tipo</label>
+      <select id="filtroTipo" [value]="filtroTipo() ?? ''" (change)="onFiltroTipo($event)">
+        <option value="">Todos</option>
+        <option value="ENTRADA">ENTRADA</option>
+        <option value="SALIDA">SALIDA</option>
+        <option value="AJUSTE">AJUSTE</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="filtroDesde">Desde</label>
+      <input
+        id="filtroDesde"
+        type="date"
+        [value]="filtroDesde() ?? ''"
+        (change)="onFiltroDesde($event)"
+      />
+    </div>
+    <div class="campo">
+      <label for="filtroHasta">Hasta</label>
+      <input
+        id="filtroHasta"
+        type="date"
+        [value]="filtroHasta() ?? ''"
+        (change)="onFiltroHasta($event)"
+      />
+    </div>
+  </div>
+
+  @if (movimientos(); as pagina) {
+    @if (pagina.content.length === 0) {
+      <p class="vacio">Sin movimientos</p>
+    } @else {
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Producto</th>
+              <th>Tipo</th>
+              <th class="numerico">Cantidad</th>
+              <th>Motivo</th>
+              <th>Pedido</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (movimiento of pagina.content; track movimiento.id) {
+              <tr>
+                <td>{{ movimiento.sku }}</td>
+                <td>{{ movimiento.productoNombre }}</td>
+                <td>
+                  <span [class]="'etiqueta tipo-' + movimiento.tipo.toLowerCase()">
+                    {{ movimiento.tipo }}
+                  </span>
+                </td>
+                <td class="numerico">{{ movimiento.cantidad }}</td>
+                <td>{{ movimiento.motivo || '—' }}</td>
+                <td>
+                  @if (movimiento.pedidoId !== null) {
+                    @if (puedeVerPedidos()) {
+                      <a [routerLink]="['/pedidos', movimiento.pedidoId]">
+                        #{{ movimiento.pedidoId }}
+                      </a>
+                    } @else {
+                      <span>#{{ movimiento.pedidoId }}</span>
+                    }
+                  } @else {
+                    —
+                  }
+                </td>
+                <td>{{ movimiento.usuarioNombre }}</td>
+                <td>{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <app-paginador [pagina]="pagina.page" (paginaCambiada)="irAPagina($event)" />
+    }
+  } @else if (!error()) {
+    <div class="cargando">Cargando</div>
+  }
+</div>
